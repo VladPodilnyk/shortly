@@ -1,0 +1,9 @@
+{
+    "server": {
+        "port": "4000"
+    },
+    "env": "development",
+    "prefix": "https://short.est/",
+    "alias_max_size": 6,
+    "requests_per_minute": 100
+}
