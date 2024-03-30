@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"golang.org/x/time/rate"
-	"shortly.io/internal/encoder"
 	"shortly.io/internal/storage"
 )
 
@@ -20,10 +19,10 @@ type testServer struct {
 // return test application instance
 func newTestApp() *application {
 	app := &application{
-		config:      AppConfig{Environment: "testing"},
-		version:     "1.0.0",
-		storage:     storage.New(),
-		algorithm:   encoder.MakeSimple("https://short.est/", 0),
+		config:  AppConfig{Environment: "testing"},
+		version: "1.0.0",
+		storage: storage.New(),
+		// algorithm:   encoder.MakeSimple("https://short.est/", 0),
 		rateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 	return app

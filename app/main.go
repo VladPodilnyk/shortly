@@ -8,17 +8,16 @@ import (
 	"golang.org/x/time/rate"
 
 	"github.com/spf13/viper"
-	"shortly.io/internal/encoder"
 	"shortly.io/internal/storage"
 )
 
 type application struct {
-	config      AppConfig
-	version     string
-	logger      *log.Logger
-	storage     storage.Storage    // app persistance
-	algorithm   encoder.UrlEncoder // url shortener algorithm
-	rateLimiter *rate.Limiter      // application rate limiter;
+	config  AppConfig
+	version string
+	logger  *log.Logger
+	storage storage.Storage // app persistance
+	// algorithm   encoder.UrlEncoder // url shortener algorithm
+	rateLimiter *rate.Limiter // application rate limiter;
 }
 
 func getVersion() (string, error) {
@@ -59,14 +58,14 @@ func main() {
 		return
 	}
 
-	algorithm := encoder.MakeSimple(cfg.Prefix, 0)
+	// algorithm := encoder.MakeSimple(cfg.Prefix, 0)
 	rateLimiter := rate.NewLimiter(rate.Every(time.Minute), cfg.RequestPerMinute)
 	app := &application{
-		config:      cfg,
-		version:     version,
-		logger:      logger,
-		storage:     storage.New(),
-		algorithm:   algorithm,
+		config:  cfg,
+		version: version,
+		logger:  logger,
+		storage: storage.New(),
+		// algorithm:   algorithm,
 		rateLimiter: rateLimiter,
 	}
 

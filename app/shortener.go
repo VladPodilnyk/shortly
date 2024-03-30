@@ -29,10 +29,11 @@ func (app *application) encodeUrlHandler(w http.ResponseWriter, r *http.Request)
 		app.failedValidationResponse(w, reqValidator.Errors)
 	}
 
-	shortUrl := app.algorithm.Encode(input.Url, input.Alias)
-	app.storage.Save(input.Url, shortUrl)
+	// FIXME: Implement the actual encoding logic
+	// shortUrl := app.algorithm.Encode(input.Url, input.Alias)
+	app.storage.Save(input.Url, "shortUrl")
 
-	response := models.EncodedUrl{ShortUrl: shortUrl}
+	response := models.EncodedUrl{ShortUrl: "shortUrl"}
 	err = app.writeJSON(w, http.StatusOK, response, nil)
 	if err != nil {
 		app.serverErrorResponse(w, err)
