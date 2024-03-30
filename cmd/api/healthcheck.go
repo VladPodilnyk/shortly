@@ -9,7 +9,7 @@ import (
 func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	isOk := app.rateLimiter.Allow()
 	if !isOk {
-		app.rateLimiterResponse(w, r)
+		app.rateLimiterResponse(w)
 		return
 	}
 
@@ -21,6 +21,6 @@ func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Reques
 
 	err := app.writeJSON(w, http.StatusOK, response, nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		app.serverErrorResponse(w, err)
 	}
 }

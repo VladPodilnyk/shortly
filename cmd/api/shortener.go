@@ -12,21 +12,21 @@ import (
 func (app *application) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	isOk := app.rateLimiter.Allow()
 	if !isOk {
-		app.rateLimiterResponse(w, r)
+		app.rateLimiterResponse(w)
 		return
 	}
 
 	var input models.UserRequest
 	err := app.readJSON(w, r, &input)
 	if err != nil {
-		app.badRequestResponse(w, r, err)
+		app.badRequestResponse(w, err)
 		return
 	}
 
 	reqValidator := validator.New(app.config.AliasMaxSize)
 	reqValidator.ValidateUserRequest(input)
 	if !reqValidator.Valid() {
-		app.failedValidationResponse(w, r, reqValidator.Errors)
+		app.failedValidationResponse(w, reqValidator.Errors)
 	}
 
 	shortUrl := app.algorithm.Encode(input.Url, input.Alias)
@@ -35,14 +35,14 @@ func (app *application) encodeUrlHandler(w http.ResponseWriter, r *http.Request)
 	response := models.EncodedUrl{ShortUrl: shortUrl}
 	err = app.writeJSON(w, http.StatusOK, response, nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		app.serverErrorResponse(w, err)
 	}
 }
 
 func (app *application) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	isOk := app.rateLimiter.Allow()
 	if !isOk {
-		app.rateLimiterResponse(w, r)
+		app.rateLimiterResponse(w)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (app *application) decodeUrlHandler(w http.ResponseWriter, r *http.Request)
 
 	err := app.readJSON(w, r, &input)
 	if err != nil {
-		app.badRequestResponse(w, r, err)
+		app.badRequestResponse(w, err)
 		return
 	}
 
@@ -58,9 +58,9 @@ func (app *application) decodeUrlHandler(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		switch {
 		case errors.Is(err, storage.ErrRecordNotFound):
-			app.notFoundResponse(w, r)
+			app.notFoundResponse(w)
 		default:
-			app.serverErrorResponse(w, r, err)
+			app.serverErrorResponse(w, err)
 		}
 		return
 	}
@@ -68,6 +68,6 @@ func (app *application) decodeUrlHandler(w http.ResponseWriter, r *http.Request)
 	response := models.DecodedUrl{OriginalUrl: originalUrl}
 	err = app.writeJSON(w, http.StatusOK, response, nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		app.serverErrorResponse(w, err)
 	}
 }

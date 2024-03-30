@@ -29,7 +29,7 @@ func newTestApp() *application {
 	return app
 }
 
-func newTestServer(t *testing.T, routes http.Handler) *testServer {
+func newTestServer(routes http.Handler) *testServer {
 	ts := httptest.NewServer(routes)
 
 	// Disable redirects

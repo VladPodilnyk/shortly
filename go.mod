@@ -3,7 +3,6 @@ module shortly.io
 go 1.22
 
 require (
-	github.com/julienschmidt/httprouter v1.3.0
 	github.com/spf13/viper v1.13.0
 	golang.org/x/time v0.5.0
 )

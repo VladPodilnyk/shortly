@@ -8,19 +8,19 @@ import (
 
 func TestAppEndToEnd(t *testing.T) {
 	app := newTestApp()
-	ts := newTestServer(t, app.routes())
+	ts := newTestServer(app.routes())
 	defer ts.Close()
 
 	var statusRespHandler models.SystemInfo
-	expectesStatusResponse := models.SystemInfo{
+	expectsStatusResponse := models.SystemInfo{
 		Status:      "available",
 		Environment: "testing",
 		Version:     "1.0.0",
 	}
 	code := ts.get(t, "/v1/status", &statusRespHandler)
 	checkStatusCode(t, code)
-	if expectesStatusResponse.Show() != statusRespHandler.Show() {
-		t.Errorf("expected %s, but got %s", expectesStatusResponse.Show(), statusRespHandler.Show())
+	if expectsStatusResponse.Show() != statusRespHandler.Show() {
+		t.Errorf("expected %s, but got %s", expectsStatusResponse.Show(), statusRespHandler.Show())
 	}
 
 	// Test encode endpoint
@@ -44,6 +44,6 @@ func TestAppEndToEnd(t *testing.T) {
 
 	checkStatusCode(t, code)
 	if decodedResHandler.OriginalUrl != decodeExpectedRes {
-		t.Errorf("expected %s orignal url but go %s", decodeExpectedRes, decodedResHandler.OriginalUrl)
+		t.Errorf("expected %s original url but go %s", decodeExpectedRes, decodedResHandler.OriginalUrl)
 	}
 }
