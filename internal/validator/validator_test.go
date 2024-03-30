@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"short.io/internal/data"
+	"shortly.io/internal/models"
 )
 
 func TestValidator(t *testing.T) {
@@ -12,13 +12,13 @@ func TestValidator(t *testing.T) {
 	validUrl := "https://www.google.com"
 	brokeUrl := "https://broken.io"
 
-	req1 := data.UserRequest{Url: validUrl, Alias: ""}
+	req1 := models.UserRequest{Url: validUrl, Alias: ""}
 	validator.ValidateUserRequest(req1)
 	if len(validator.Errors) > 0 {
 		t.Error("unexpected broken request")
 	}
 
-	req2 := data.UserRequest{Url: brokeUrl, Alias: "abcd"}
+	req2 := models.UserRequest{Url: brokeUrl, Alias: "abcd"}
 	validator.ValidateUserRequest(req2)
 	if len(validator.Errors) != 2 {
 		errMsg := ""

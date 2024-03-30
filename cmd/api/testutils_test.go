@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"golang.org/x/time/rate"
-	"short.io/internal/encoder"
-	"short.io/internal/storage"
+	"shortly.io/internal/encoder"
+	"shortly.io/internal/storage"
 )
 
 type testServer struct {
@@ -24,7 +24,7 @@ func newTestApp() *application {
 		version:     "1.0.0",
 		storage:     storage.New(),
 		algorithm:   encoder.MakeSimple("https://short.est/", 0),
-		ratelimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
+		rateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 	return app
 }

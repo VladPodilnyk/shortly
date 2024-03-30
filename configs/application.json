@@ -1,9 +1,9 @@
 {
     "server": {
-        "port": "4000"
+        "port": "8080"
     },
     "env": "development",
-    "prefix": "https://short.est/",
+    "prefix": "https://shortly.io/",
     "alias_max_size": 6,
     "requests_per_minute": 100
 }

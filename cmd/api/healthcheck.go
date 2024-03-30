@@ -3,17 +3,17 @@ package main
 import (
 	"net/http"
 
-	"short.io/internal/data"
+	"shortly.io/internal/models"
 )
 
-func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
-	isOk := app.ratelimiter.Allow()
+func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	isOk := app.rateLimiter.Allow()
 	if !isOk {
-		app.rateLimitedReponse(w, r)
+		app.rateLimiterResponse(w, r)
 		return
 	}
 
-	response := data.SystemInfo{
+	response := models.SystemInfo{
 		Status:      "available",
 		Environment: app.config.Environment,
 		Version:     app.version,

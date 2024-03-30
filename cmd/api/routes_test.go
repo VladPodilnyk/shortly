@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"short.io/internal/data"
+	"shortly.io/internal/models"
 )
 
 func TestAppEndToEnd(t *testing.T) {
@@ -11,8 +11,8 @@ func TestAppEndToEnd(t *testing.T) {
 	ts := newTestServer(t, app.routes())
 	defer ts.Close()
 
-	var statusRespHandler data.SystemInfo
-	expectesStatusResponse := data.SystemInfo{
+	var statusRespHandler models.SystemInfo
+	expectesStatusResponse := models.SystemInfo{
 		Status:      "available",
 		Environment: "testing",
 		Version:     "1.0.0",
@@ -24,7 +24,7 @@ func TestAppEndToEnd(t *testing.T) {
 	}
 
 	// Test encode endpoint
-	var encodeResHandler data.EncodedUrl
+	var encodeResHandler models.EncodedUrl
 	encodeEndpointPayload := `{"url": "https://www.google.com"}`
 	encodeExpectedRes := "https://short.est/0"
 
@@ -38,7 +38,7 @@ func TestAppEndToEnd(t *testing.T) {
 	// Test decode endpoint
 	decodeEndpointPayload := `{"short_url": "https://short.est/0"}`
 	decodeExpectedRes := "https://www.google.com"
-	var decodedResHandler data.DecodedUrl
+	var decodedResHandler models.DecodedUrl
 
 	code = ts.post(t, "/v1/decode", decodeEndpointPayload, &decodedResHandler)
 

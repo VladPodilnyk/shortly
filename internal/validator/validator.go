@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"short.io/internal/data"
+	"shortly.io/internal/models"
 )
 
 type Validator struct {
@@ -20,7 +20,7 @@ func (v *Validator) Valid() bool {
 	return len(v.Errors) == 0
 }
 
-func (v *Validator) ValidateUserRequest(req data.UserRequest) {
+func (v *Validator) ValidateUserRequest(req models.UserRequest) {
 	_, err := http.Get(req.Url)
 	if err != nil {
 		v.addError("url", "broken")
