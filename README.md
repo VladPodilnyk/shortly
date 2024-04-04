@@ -1,10 +1,11 @@
 ### shortly
 
 A URL shortener service at home xD
+🚧 This repo is under rework 🚧
 
 #
 
-## How to run an app
+## How to run an app (OLD)
 
 There are two ways to start an application. For the fist one you will need
 both `make` and docker installed on your machine. For the second one you will
