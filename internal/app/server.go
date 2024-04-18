@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"context"
@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-func (app *application) serve() error {
+func Serve(app *AppData) error {
 	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.config.Server.Port),
-		Handler:      app.routes(),
+		Addr:         fmt.Sprintf(":%d", app.Config.Server.Port),
+		Handler:      Routes(app),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -30,7 +30,7 @@ func (app *application) serve() error {
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 
-		app.logger.Printf("caught signal %s", s.String())
+		app.Logger.Printf("caught signal %s", s.String())
 
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
@@ -40,11 +40,11 @@ func (app *application) serve() error {
 			shutdownError <- err
 		}
 
-		app.logger.Print("app shutdown initiated...")
+		app.Logger.Print("app shutdown initiated...")
 		shutdownError <- nil
 	}()
 
-	app.logger.Printf("starting %s server on %s\n", app.config.Environment, server.Addr)
+	app.Logger.Printf("starting %s server on %s\n", app.Config.Environment, server.Addr)
 	err := server.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
@@ -55,6 +55,6 @@ func (app *application) serve() error {
 		return err
 	}
 
-	app.logger.Printf("server has been stopped %s\n", server.Addr)
+	app.Logger.Printf("server has been stopped %s\n", server.Addr)
 	return nil
 }

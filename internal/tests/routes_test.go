@@ -1,14 +1,15 @@
-package main
+package tests
 
 import (
 	"testing"
 
+	"shortly.io/internal/app"
 	"shortly.io/internal/models"
 )
 
 func TestAppEndToEnd(t *testing.T) {
-	app := newTestApp()
-	ts := newTestServer(app.routes())
+	appData := newTestApp()
+	ts := newTestServer(app.Routes(appData))
 	defer ts.Close()
 
 	var statusRespHandler models.SystemInfo

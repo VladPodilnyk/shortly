@@ -1,4 +1,4 @@
-package main
+package config
 
 import "github.com/spf13/viper"
 
@@ -14,7 +14,7 @@ type AppConfig struct {
 	RequestPerMinute int          `mapstructure:"requests_per_minute"`
 }
 
-func readConfig() (AppConfig, error) {
+func ReadConfig() (AppConfig, error) {
 	configReader := viper.New()
 	var config AppConfig
 
