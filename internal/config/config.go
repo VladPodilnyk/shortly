@@ -8,6 +8,7 @@ type ServerConfig struct {
 
 type AppConfig struct {
 	Server           ServerConfig `mapstructure:"server"`
+	MongoDbUri       string       `mapstructure:mongo_db_uri`
 	Environment      string       `mapstructure:"env"`
 	Prefix           string       `mapstructure:"prefix"`
 	AliasMaxSize     int          `mapstructure:"alias_max_size"`
@@ -20,7 +21,6 @@ func ReadConfig() (AppConfig, error) {
 
 	configReader.SetConfigName("application")
 	configReader.SetConfigType("json")
-	configReader.AddConfigPath("./configs")
 
 	err := configReader.ReadInConfig()
 	if err != nil {
