@@ -5,7 +5,7 @@ A URL shortener service at home xD
 
 #
 
-## How to run an app (OLD)
+## How to run an app (OLD and broken🙈)
 
 There are two ways to start an application. For the fist one you will need
 both `make` and docker installed on your machine. For the second one you will

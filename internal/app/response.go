@@ -10,8 +10,8 @@ func (app *AppData) logError(err error) {
 	app.Logger.Println(err)
 }
 
-func (app *AppData) errorResponse(w http.ResponseWriter, status int, message interface{}) {
-	response := map[string]interface{}{"error": message}
+func (app *AppData) errorResponse(w http.ResponseWriter, status int, message any) {
+	response := map[string]any{"error": message}
 	err := helpers.WriteJSON(w, status, response, nil)
 	if err != nil {
 		app.logError(err)
@@ -25,7 +25,7 @@ func (app *AppData) serverErrorResponse(w http.ResponseWriter, err error) {
 	app.errorResponse(w, http.StatusInternalServerError, message)
 }
 
-func (app *AppData) successfulResponse(w http.ResponseWriter, data interface{}) {
+func (app *AppData) successfulResponse(w http.ResponseWriter, data any) {
 	err := helpers.WriteJSON(w, http.StatusOK, data, nil)
 	if err != nil {
 		app.serverErrorResponse(w, err)

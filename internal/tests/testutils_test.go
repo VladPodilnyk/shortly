@@ -24,7 +24,7 @@ func newTestApp() *app.AppData {
 		Config:      config.AppConfig{Environment: "testing"},
 		Version:     "1.0.0",
 		Logger:      nil,
-		Storage:     storage.New(),
+		Storage:     storage.NewInMemoryStorage(),
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 	return app

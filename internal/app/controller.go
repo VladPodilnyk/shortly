@@ -40,7 +40,7 @@ func Routes(appData *AppData) *http.ServeMux {
 func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	userRequest, ok := getPayload[models.UserRequest](r.Context())
 	if !ok {
-		app.serverErrorResponse(w, errors.New("Failed to parse request payload from the context"))
+		app.serverErrorResponse(w, errors.New("failed to parse request payload from the context"))
 		return
 	}
 
@@ -58,7 +58,7 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	encodedUrl, ok := getPayload[models.EncodedUrl](r.Context())
 	if !ok {
-		app.serverErrorResponse(w, errors.New("Failed to parse request payload from the context"))
+		app.serverErrorResponse(w, errors.New("failed to parse request payload from the context"))
 		return
 	}
 

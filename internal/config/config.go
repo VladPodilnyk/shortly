@@ -8,7 +8,7 @@ type ServerConfig struct {
 
 type AppConfig struct {
 	Server           ServerConfig `mapstructure:"server"`
-	MongoDbUri       string       `mapstructure:mongo_db_uri`
+	MongoDbUri       string       `mapstructure:"mongo_db_uri"`
 	Environment      string       `mapstructure:"env"`
 	Prefix           string       `mapstructure:"prefix"`
 	AliasMaxSize     int          `mapstructure:"alias_max_size"`
@@ -19,7 +19,7 @@ func ReadConfig() (AppConfig, error) {
 	configReader := viper.New()
 	var config AppConfig
 
-	configReader.SetConfigName("application")
+	configReader.SetConfigName(".application")
 	configReader.SetConfigType("json")
 
 	err := configReader.ReadInConfig()
