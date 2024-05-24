@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+const maxBodySize = 1_048_576
+
 func WriteJSON(w http.ResponseWriter, status int, data any, headers http.Header) error {
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
@@ -29,8 +31,7 @@ func WriteJSON(w http.ResponseWriter, status int, data any, headers http.Header)
 
 func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	// Use http.MaxBytesReader() to limit the size of the request body to 1MB.
-	maxBytes := 1_048_576
-	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
+	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBodySize))
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 
