@@ -11,7 +11,6 @@ import (
 	"golang.org/x/time/rate"
 	"shortly.io/internal/app"
 	"shortly.io/internal/config"
-	"shortly.io/internal/storage"
 )
 
 type testServer struct {
@@ -24,7 +23,7 @@ func newTestApp() *app.AppData {
 		Config:      config.AppConfig{Environment: "testing"},
 		Version:     "1.0.0",
 		Logger:      nil,
-		Storage:     storage.NewInMemoryStorage(),
+		Storage:     nil, // FIXME: add storage
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 	return app
