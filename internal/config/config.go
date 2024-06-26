@@ -21,6 +21,7 @@ func ReadConfig() (AppConfig, error) {
 
 	configReader.SetConfigName(".application")
 	configReader.SetConfigType("json")
+	configReader.AddConfigPath(".")
 
 	err := configReader.ReadInConfig()
 	if err != nil {

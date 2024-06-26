@@ -8,8 +8,9 @@ import (
 )
 
 type Middleware func(http.HandlerFunc) http.HandlerFunc
+type PayloadKey string
 
-const ContextPayloadKey = "requestPayload"
+const ContextPayloadKey = PayloadKey("requestPayload")
 
 func applyMiddleware(f http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
 	transformed := f

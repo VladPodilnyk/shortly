@@ -13,7 +13,7 @@ start:
 ## run-dev: run the cmd/api application
 .PHONY: run-dev
 run-dev:
-	go run ./cmd/api
+	go run ./cmd/shortly
 
 ## audit: tidy dependencies and format
 .PHONY: audit
