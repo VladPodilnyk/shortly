@@ -17,6 +17,11 @@ type EncodedUrl struct {
 	ShortUrl string `json:"short_url"`
 }
 
+type UrlData struct {
+	ShortUrl    string `bson:"short_url"`
+	OriginalUrl string `bson:"original_url"`
+}
+
 type SystemInfo struct {
 	Status      string `json:"status"`
 	Environment string `json:"environment"`

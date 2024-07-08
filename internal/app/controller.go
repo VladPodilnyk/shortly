@@ -44,14 +44,25 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("[DEBUG] user request is OK: %s, %s \n", userRequest.Url, userRequest.Alias)
+
 	validationErrors := validateUserRequest(userRequest, app.Config.AliasMaxSize)
 	if len(validationErrors) > 0 {
 		app.failedValidationResponse(w, validationErrors)
 		return
 	}
 
+	fmt.Println("[DEBUG] validation is OK")
+
 	shortUrl := encoder.Base58()
-	app.Storage.Save(userRequest.Url, shortUrl)
+
+	fmt.Printf("[DEBUG] short url is: %s \n", shortUrl)
+
+	err := app.Storage.Save(r.Context(), userRequest.Url, shortUrl)
+	if err != nil {
+		app.logError(err)
+		app.serverErrorResponse(w, err)
+	}
 	app.successfulResponse(w, models.EncodedUrl{ShortUrl: shortUrl})
 }
 
@@ -62,7 +73,7 @@ func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	originalUrl, err := app.Storage.Get(encodedUrl.ShortUrl)
+	originalUrl, err := app.Storage.Get(r.Context(), encodedUrl.ShortUrl)
 	if err != nil {
 		switch {
 		case errors.Is(err, storage.ErrRecordNotFound):
@@ -96,9 +107,10 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 		validationErrors["url"] = "broken"
 	}
 
-	if len(req.Alias) > maxAliasSize {
-		errorMessage := fmt.Sprintf("alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
-		validationErrors["alias"] = errorMessage
-	}
+	// FIXME: alias is optional field
+	// if len(req.Alias) > maxAliasSize {
+	// 	errorMessage := fmt.Sprintf("alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
+	// 	validationErrors["alias"] = errorMessage
+	// }
 	return validationErrors
 }

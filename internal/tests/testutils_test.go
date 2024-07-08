@@ -1,16 +1,21 @@
 package tests
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/time/rate"
 	"shortly.io/internal/app"
 	"shortly.io/internal/config"
+	"shortly.io/internal/storage"
 )
 
 type testServer struct {
@@ -19,11 +24,17 @@ type testServer struct {
 
 // return test application instance
 func newTestApp() *app.AppData {
+	testMongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://0.0.0.0:27017"))
+	fmt.Printf("connect to mongoDb, err: %v\n", err)
+	if err != nil {
+		panic(err)
+	}
+
 	app := &app.AppData{
 		Config:      config.AppConfig{Environment: "testing"},
 		Version:     "1.0.0",
 		Logger:      nil,
-		Storage:     nil, // FIXME: add storage
+		Storage:     storage.NewMongoDbStorage(testMongoClient),
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 	return app
