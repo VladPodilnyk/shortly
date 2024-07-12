@@ -25,8 +25,8 @@ type testServer struct {
 // return test application instance
 func newTestApp() *app.AppData {
 	testMongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://0.0.0.0:27017"))
-	fmt.Printf("connect to mongoDb, err: %v\n", err)
 	if err != nil {
+		fmt.Printf("failed to connect to mongodb, err: %v\n", err)
 		panic(err)
 	}
 

@@ -1,23 +1,12 @@
 package tests
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
-	"go.mongodb.org/mongo-driver/mongo"
 	"shortly.io/internal/app"
 	"shortly.io/internal/models"
 )
-
-func TestDebugConn(t *testing.T) {
-	appData := newTestApp()
-	_, err := appData.Storage.Get(context.TODO(), "test")
-	if err != nil && err != mongo.ErrNoDocuments {
-		fmt.Printf("failed to get data: %s\n", err.Error())
-		t.Error(err)
-	}
-}
 
 func TestAppEndToEnd(t *testing.T) {
 	appData := newTestApp()
@@ -39,24 +28,20 @@ func TestAppEndToEnd(t *testing.T) {
 	// Test encode endpoint
 	var encodeResHandler models.EncodedUrl
 	encodeEndpointPayload := `{"url": "https://www.google.com"}`
-	encodeExpectedRes := "https://short.est/0"
 
 	code = ts.post(t, "/v1/encode", encodeEndpointPayload, &encodeResHandler)
 
 	checkStatusCode(t, code)
-	if encodeResHandler.ShortUrl != encodeExpectedRes {
-		t.Errorf("expected %s short url but got %s", encodeExpectedRes, encodeResHandler.ShortUrl)
+
+	// Test decode endpoint
+	decodeExpectedRes := "https://www.google.com"
+	decodeEndpointPayload := fmt.Sprintf(`{"short_url": "%s"}`, encodeResHandler.ShortUrl)
+	var decodedResHandler models.DecodedUrl
+
+	code = ts.post(t, "/v1/decode", decodeEndpointPayload, &decodedResHandler)
+
+	checkStatusCode(t, code)
+	if decodedResHandler.OriginalUrl != decodeExpectedRes {
+		t.Errorf("expected %s original url but go %s", decodeExpectedRes, decodedResHandler.OriginalUrl)
 	}
-
-	// // Test decode endpoint
-	// decodeEndpointPayload := `{"short_url": "https://short.est/0"}`
-	// decodeExpectedRes := "https://www.google.com"
-	// var decodedResHandler models.DecodedUrl
-
-	// code = ts.post(t, "/v1/decode", decodeEndpointPayload, &decodedResHandler)
-
-	// checkStatusCode(t, code)
-	// if decodedResHandler.OriginalUrl != decodeExpectedRes {
-	// 	t.Errorf("expected %s original url but go %s", decodeExpectedRes, decodedResHandler.OriginalUrl)
-	// }
 }

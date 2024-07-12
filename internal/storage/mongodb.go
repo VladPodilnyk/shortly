@@ -24,13 +24,9 @@ func NewMongoDbStorage(client *mongo.Client) *MongoDbStorage {
 }
 
 func (s *MongoDbStorage) Save(ctx context.Context, givenUrl string, shortUrl string) error {
-	// urlData := models.UrlData{ShortUrl: shortUrl, OriginalUrl: givenUrl}
-	// _, err := s.collection.InsertOne(ctx, urlData)
-	// if err != nil {
-	// 	fmt.Printf("[DEBUG] failed to insert data: %s \n", err.Error())
-	// }
-	// return err
-	return nil
+	urlData := models.UrlData{ShortUrl: shortUrl, OriginalUrl: givenUrl}
+	_, err := s.collection.InsertOne(ctx, urlData)
+	return err
 }
 
 func (s *MongoDbStorage) Get(ctx context.Context, shortUrl string) (string, error) {

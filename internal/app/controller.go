@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"shortly.io/internal/encoder"
@@ -44,19 +43,13 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("[DEBUG] user request is OK: %s, %s \n", userRequest.Url, userRequest.Alias)
-
 	validationErrors := validateUserRequest(userRequest, app.Config.AliasMaxSize)
 	if len(validationErrors) > 0 {
 		app.failedValidationResponse(w, validationErrors)
 		return
 	}
 
-	fmt.Println("[DEBUG] validation is OK")
-
 	shortUrl := encoder.Base58()
-
-	fmt.Printf("[DEBUG] short url is: %s \n", shortUrl)
 
 	err := app.Storage.Save(r.Context(), userRequest.Url, shortUrl)
 	if err != nil {
