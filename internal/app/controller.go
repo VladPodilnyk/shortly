@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"shortly.io/internal/encoder"
@@ -49,14 +50,29 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortUrl := encoder.Base58()
+	var shortUrl string
+	if len(userRequest.Alias) > 0 {
+		_, err := app.Storage.Get(r.Context(), userRequest.Alias)
+		switch err {
+		case storage.ErrInternalError:
+			app.serverErrorResponse(w, err)
+			return
+		case nil:
+			app.failedValidationResponse(w, map[string]string{"alias": "already exists"})
+			return
+		}
+		shortUrl = userRequest.Alias
+	} else {
+		shortUrl = encoder.Base58()
+	}
 
-	err := app.Storage.Save(r.Context(), userRequest.Url, shortUrl)
+	finalShortUrl := fmt.Sprintf("%s/%s", app.Config.Prefix, shortUrl)
+	err := app.Storage.Save(r.Context(), userRequest.Url, finalShortUrl)
 	if err != nil {
 		app.logError(err)
 		app.serverErrorResponse(w, err)
 	}
-	app.successfulResponse(w, models.EncodedUrl{ShortUrl: shortUrl})
+	app.successfulResponse(w, models.EncodedUrl{ShortUrl: finalShortUrl})
 }
 
 func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
@@ -100,10 +116,9 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 		validationErrors["url"] = "broken"
 	}
 
-	// FIXME: alias is optional field
-	// if len(req.Alias) > maxAliasSize {
-	// 	errorMessage := fmt.Sprintf("alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
-	// 	validationErrors["alias"] = errorMessage
-	// }
+	if req.Alias != "" && len(req.Alias) > maxAliasSize {
+		errorMessage := fmt.Sprintf("alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
+		validationErrors["alias"] = errorMessage
+	}
 	return validationErrors
 }

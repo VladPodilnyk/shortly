@@ -31,7 +31,7 @@ func newTestApp() *app.AppData {
 	}
 
 	app := &app.AppData{
-		Config:      config.AppConfig{Environment: "testing"},
+		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10, Prefix: "https://shortly.io"},
 		Version:     "1.0.0",
 		Logger:      nil,
 		Storage:     storage.NewMongoDbStorage(testMongoClient),
