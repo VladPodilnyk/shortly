@@ -1,4 +1,17 @@
-.metals/
 .vscode/
-./ui/node_modules/
 .application.json
+
+# JS stuff
+# Logs
+ui/logs/
+ui/*.log
+ui/npm-debug.log*
+ui/yarn-debug.log*
+ui/yarn-error.log*
+ui/pnpm-debug.log*
+ui/lerna-debug.log*
+
+ui/node_modules/
+ui/dist/
+ui/dist-ssr/
+ui/*.local

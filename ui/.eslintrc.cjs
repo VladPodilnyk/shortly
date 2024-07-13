@@ -1,29 +1,24 @@
 module.exports = {
+  root: true,
   env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh',  "baseui"],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh'],
   rules: {
-    'react/jsx-no-target-blank': 'off',
-    "react/prop-types": "off",
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
-    'baseui/deprecated-theme-api': "warn",
-    'baseui/deprecated-component-api': "warn",
-    'baseui/no-deep-imports': "warn",
-    'indent': [
-      'error',
-      2
-    ],
+    //'baseui/deprecated-theme-api': "warn",
+    //'baseui/deprecated-component-api': "warn",
+    //'baseui/no-deep-imports': "warn",
+
+    'indent': ['error', 2],
     'linebreak-style': [
       'error',
       'unix'
@@ -44,7 +39,5 @@ module.exports = {
     'arrow-spacing': [
       'error', { 'before': true, 'after': true }
     ],
-    // do not warn about console logs
-    'no-console': 0
   },
 }
