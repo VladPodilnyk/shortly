@@ -18,13 +18,20 @@ import (
 	"shortly.io/internal/storage"
 )
 
+var TestContext = context.Background()
+
 type testServer struct {
 	*httptest.Server
 }
 
+type testData struct {
+	TestApp *app.AppData
+	Cleanup func()
+}
+
 // return test application instance
-func newTestApp() *app.AppData {
-	testMongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://0.0.0.0:27017"))
+func newTestApp() testData {
+	testMongoClient, err := mongo.Connect(TestContext, options.Client().ApplyURI("mongodb://0.0.0.0:27017"))
 	if err != nil {
 		fmt.Printf("failed to connect to mongodb, err: %v\n", err)
 		panic(err)
@@ -37,7 +44,16 @@ func newTestApp() *app.AppData {
 		Storage:     storage.NewMongoDbStorage(testMongoClient),
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
-	return app
+
+	mongoClose := func() {
+		err := testMongoClient.Disconnect(TestContext)
+		if err != nil {
+			fmt.Printf("failed to disconnect from mongodb, err: %v\n", err)
+			panic(err)
+		}
+	}
+
+	return testData{TestApp: app, Cleanup: mongoClose}
 }
 
 func newTestServer(routes http.Handler) *testServer {

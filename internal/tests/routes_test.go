@@ -8,10 +8,19 @@ import (
 	"shortly.io/internal/models"
 )
 
-func TestAppStatusRoute(t *testing.T) {
+func setup() (*testServer, func()) {
 	appData := newTestApp()
-	ts := newTestServer(app.Routes(appData))
-	defer ts.Close()
+	ts := newTestServer(app.Routes(appData.TestApp))
+	teardown := func() {
+		appData.Cleanup()
+		ts.Close()
+	}
+	return ts, teardown
+}
+
+func TestAppStatusRoute(t *testing.T) {
+	ts, teardown := setup()
+	defer teardown()
 
 	var statusRespHandler models.SystemInfo
 	expectsStatusResponse := models.SystemInfo{
@@ -27,9 +36,8 @@ func TestAppStatusRoute(t *testing.T) {
 }
 
 func TestAppEnd2End(t *testing.T) {
-	appData := newTestApp()
-	ts := newTestServer(app.Routes(appData))
-	defer ts.Close()
+	ts, teardown := setup()
+	defer teardown()
 
 	// Test encode endpoint
 	var encodeResHandler models.EncodedUrl
@@ -53,9 +61,8 @@ func TestAppEnd2End(t *testing.T) {
 }
 
 func TestAppAllowShortAlias(t *testing.T) {
-	appData := newTestApp()
-	ts := newTestServer(app.Routes(appData))
-	defer ts.Close()
+	ts, teardown := setup()
+	defer teardown()
 
 	var encodeResHandler models.EncodedUrl
 	encodeEndpointPayload := `{"url": "https://www.google.com", "alias": "ohirok"}`
