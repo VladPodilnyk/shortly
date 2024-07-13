@@ -46,6 +46,7 @@ func newTestApp() testData {
 	}
 
 	mongoClose := func() {
+		truncateDatabase(testMongoClient)
 		err := testMongoClient.Disconnect(TestContext)
 		if err != nil {
 			fmt.Printf("failed to disconnect from mongodb, err: %v\n", err)
@@ -104,5 +105,27 @@ func (ts *testServer) post(t *testing.T, path string, payload string, dst interf
 func checkStatusCode(t *testing.T, code int) {
 	if code != http.StatusOK {
 		t.Errorf("want %d; got %d", http.StatusOK, code)
+	}
+}
+
+func truncateDatabase(client *mongo.Client) {
+	databases, err := client.ListDatabaseNames(TestContext, map[string]interface{}{})
+	if err != nil {
+		panic(err)
+	}
+
+	// Drop each database
+	for _, dbName := range databases {
+		// Skip system databases
+		if dbName == "admin" || dbName == "local" || dbName == "config" {
+			continue
+		}
+
+		err := client.Database(dbName).Drop(context.TODO())
+		if err != nil {
+			fmt.Printf("Failed to drop database %s: %v", dbName, err)
+			panic(err)
+		}
+		fmt.Printf("Dropped database: %s\n", dbName)
 	}
 }
