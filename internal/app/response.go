@@ -1,11 +1,17 @@
 package app
 
 import (
+	"errors"
 	"net/http"
 
 	"shortly.io/internal/helpers"
 )
 
+// List of errors
+var ErrInvalidPayload = errors.New("failed to parse request payload")
+var ErrAliasAlreadyExists = errors.New("alias already exists")
+
+// Response helpers
 func (app *AppData) logError(err error) {
 	app.Logger.Println(err)
 }

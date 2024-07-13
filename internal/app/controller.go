@@ -38,9 +38,10 @@ func Routes(appData *AppData) *http.ServeMux {
 }
 
 func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
-	userRequest, ok := getPayload[models.UserRequest](r.Context())
+	ctx := r.Context()
+	userRequest, ok := getPayload[models.UserRequest](ctx)
 	if !ok {
-		app.serverErrorResponse(w, errors.New("failed to parse request payload from the context"))
+		app.serverErrorResponse(w, ErrInvalidPayload)
 		return
 	}
 
@@ -50,24 +51,14 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var shortUrl string
-	if len(userRequest.Alias) > 0 {
-		_, err := app.Storage.Get(r.Context(), userRequest.Alias)
-		switch err {
-		case storage.ErrInternalError:
-			app.serverErrorResponse(w, err)
-			return
-		case nil:
-			app.failedValidationResponse(w, map[string]string{"alias": "already exists"})
-			return
-		}
-		shortUrl = userRequest.Alias
-	} else {
-		shortUrl = encoder.Base58()
+	shortUrl, err := getShortUrl(ctx, app, userRequest.Alias)
+	if err != nil {
+		app.serverErrorResponse(w, err)
+		return
 	}
 
-	finalShortUrl := fmt.Sprintf("%s/%s", app.Config.Prefix, shortUrl)
-	err := app.Storage.Save(r.Context(), userRequest.Url, finalShortUrl)
+	finalShortUrl := makeShortUrl(app.Config.Prefix, shortUrl)
+	err = app.Storage.Save(ctx, userRequest.Url, finalShortUrl)
 	if err != nil {
 		app.logError(err)
 		app.serverErrorResponse(w, err)
@@ -76,13 +67,14 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
-	encodedUrl, ok := getPayload[models.EncodedUrl](r.Context())
+	ctx := r.Context()
+	encodedUrl, ok := getPayload[models.EncodedUrl](ctx)
 	if !ok {
-		app.serverErrorResponse(w, errors.New("failed to parse request payload from the context"))
+		app.serverErrorResponse(w, ErrInvalidPayload)
 		return
 	}
 
-	originalUrl, err := app.Storage.Get(r.Context(), encodedUrl.ShortUrl)
+	originalUrl, err := app.Storage.Get(ctx, encodedUrl.ShortUrl)
 	if err != nil {
 		switch {
 		case errors.Is(err, storage.ErrRecordNotFound):
@@ -113,7 +105,7 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 	validationErrors := make(map[string]string)
 	_, err := http.Get(req.Url)
 	if err != nil {
-		validationErrors["url"] = "broken"
+		validationErrors["url"] = "invalid url"
 	}
 
 	if req.Alias != "" && len(req.Alias) > maxAliasSize {
@@ -121,4 +113,25 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 		validationErrors["alias"] = errorMessage
 	}
 	return validationErrors
+}
+
+func makeShortUrl(prefix string, shortUrl string) string {
+	return fmt.Sprintf("%s/%s", prefix, shortUrl)
+}
+
+func getShortUrl(ctx context.Context, app *AppData, alias string) (string, error) {
+	var shortUrl string
+	if len(alias) > 0 {
+		_, err := app.Storage.Get(ctx, alias)
+		switch err {
+		case storage.ErrInternalError:
+			return "", err
+		case nil:
+			return "", ErrAliasAlreadyExists
+		}
+		shortUrl = alias
+	} else {
+		shortUrl = encoder.Base58()
+	}
+	return shortUrl, nil
 }
