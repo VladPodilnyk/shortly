@@ -1,18 +1,22 @@
-import { useState } from 'react'
+import { Layout } from "./components/Layout";
+import { Header } from "./components/Header";
+import { UserForm } from "./components/UserForm";
+
+// const Centered = styled("div", {
+//   display: "flex",
+//   justifyContent: "center",
+//   alignItems: "center",
+//   height: "100%",
+// });
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1 className="font-semibold">Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+    <Layout>
+      <Header title="Shortly" />
+      <UserForm />
+    </Layout>
+  );
 }
 
 export default App
