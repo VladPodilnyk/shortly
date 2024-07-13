@@ -9,7 +9,7 @@ export function Layout(props: { children: React.ReactNode }) {
   return (
     <StyletronProvider value={engine}>
       <BaseProvider theme={LightTheme}>
-        <Block height="100vh" width="100vh" margin="2rem">
+        <Block height="100%" width="100%" margin="2rem">
           {props.children}
         </Block>
       </BaseProvider>

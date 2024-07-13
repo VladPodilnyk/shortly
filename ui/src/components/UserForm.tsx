@@ -1,10 +1,20 @@
 import { Block } from 'baseui/block';
 import { Card, StyledBody, StyledAction } from 'baseui/card';
-import { LabelMedium } from 'baseui/typography';
+import { LabelLarge } from 'baseui/typography';
 import { Input } from 'baseui/input';
 import { Button } from 'baseui/button';
+import { getShortUrl } from '../api/api';
+
 
 export function UserForm() {
+
+  const onClick = async () => {
+    console.log('Button clicked');
+    const res = await getShortUrl('https://www.google.com');
+    console.log(res);
+  };
+
+
   return (
     <Block
       display="flex"
@@ -12,18 +22,26 @@ export function UserForm() {
       justifyContent="center"
       alignItems="center"
     >
-      <Card>
+      <Card overrides={{ Root: { style: { minWidth: '25rem' } } }}>
         {/* <FormControl> */}
         <StyledBody>
-          <LabelMedium>Shorten a long URL</LabelMedium>
-          <Input />
-          <LabelMedium>Provide your own alias</LabelMedium>
-          <Input />
+          <LabelLarge marginBottom="0.5rem">Super long URL</LabelLarge>
+          <Block marginBottom="1rem">
+            <Input size='compact' />
+          </Block>
+          <LabelLarge marginBottom="0.5rem">Alias (optional)</LabelLarge>
+          <Block marginBottom="2rem">
+            <Input size='compact' />
+          </Block>
         </StyledBody>
         <StyledAction>
-          <Button>
-              Button Label
-          </Button>
+          <Block
+            display="flex"
+            flexDirection="row"
+            justifyContent="flex-end"
+          >
+            <Button size='compact' onClick={onClick}>Make it short</Button>
+          </Block>
         </StyledAction>
         {/* </FormControl> */}
       </Card>

@@ -1,11 +1,11 @@
-import { Header } from './components/Header';
+import { HeadingLarge } from 'baseui/typography';
 import { Layout } from './components/Layout';
 import { UserForm } from './components/UserForm';
 
 export function App() {
   return (
     <Layout>
-      <Header title="Shortly" />
+      <HeadingLarge marginBottom="10rem">Shortly</HeadingLarge>
       <UserForm />
     </Layout>
   );
