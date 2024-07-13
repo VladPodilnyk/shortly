@@ -1,3 +1,4 @@
 .metals/
 .vscode/
+./ui/node_modules/
 .application.json
