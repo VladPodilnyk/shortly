@@ -10,7 +10,7 @@ export function UserForm() {
 
   const onClick = async () => {
     console.log('Button clicked');
-    const res = await getShortUrl('https://www.google.com');
+    const res = await getShortUrl('https://www.goofsdgle.com');
     console.log(res);
   };
 

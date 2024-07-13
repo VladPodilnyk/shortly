@@ -14,6 +14,8 @@ import (
 func Routes(appData *AppData) *http.ServeMux {
 	mux := http.NewServeMux()
 
+	// mux.HandleFunc("GET /", appData.serveStaticFile)
+
 	mux.HandleFunc("POST /v1/encode",
 		applyMiddleware(
 			appData.encodeUrlHandler,
@@ -36,6 +38,10 @@ func Routes(appData *AppData) *http.ServeMux {
 	)
 	return mux
 }
+
+// func (app *AppData) serveStaticFile(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "static/index.html")
+// }
 
 func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
