@@ -14,10 +14,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    //'baseui/deprecated-theme-api': "warn",
-    //'baseui/deprecated-component-api': "warn",
-    //'baseui/no-deep-imports': "warn",
-
     'indent': ['error', 2],
     'linebreak-style': [
       'error',
