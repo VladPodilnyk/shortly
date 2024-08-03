@@ -1,5 +1,5 @@
 .vscode/
-.application.json
+.application*.json
 
 # JS stuff
 # Logs

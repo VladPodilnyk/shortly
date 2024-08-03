@@ -13,7 +13,7 @@ start:
 ## run-dev: runs the cmd/api application
 .PHONY: run-dev
 run-dev:
-	go run ./cmd/shortly
+	go run ./cmd/shortly --env=dev
 
 ## run-ui: runs the ui dev server
 .PHONY: run-ui

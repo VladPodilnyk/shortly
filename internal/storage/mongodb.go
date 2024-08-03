@@ -8,18 +8,13 @@ import (
 	"shortly.io/internal/models"
 )
 
-const (
-	DB_NAME    = "short_refs"
-	COLLECTION = "short_urls"
-)
-
 type MongoDbStorage struct {
 	client     *mongo.Client
 	collection *mongo.Collection
 }
 
-func NewMongoDbStorage(client *mongo.Client) *MongoDbStorage {
-	col := client.Database(DB_NAME).Collection(COLLECTION)
+func NewMongoDbStorage(client *mongo.Client, dbName string, collectionName string) *MongoDbStorage {
+	col := client.Database(dbName).Collection(collectionName)
 	return &MongoDbStorage{client: client, collection: col}
 }
 

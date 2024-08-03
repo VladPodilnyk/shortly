@@ -41,11 +41,11 @@ func main() {
 	version, err := app.GetVersion()
 	logFatalAndExit(logger, err)
 
-	dbClient, err := setupDb(ctx, cfg.MongoDbUri)
+	dbClient, err := setupDb(ctx, cfg.Storage.MongoDbUri)
 	logFatalAndExit(logger, err)
 	defer closeDb(ctx, dbClient, logger)
 
-	mongoDb := storage.NewMongoDbStorage(dbClient)
+	mongoDb := storage.NewMongoDbStorage(dbClient, cfg.Storage.MongoDbName, cfg.Storage.MongoDbCollection)
 
 	data := &app.AppData{
 		Config:      cfg,

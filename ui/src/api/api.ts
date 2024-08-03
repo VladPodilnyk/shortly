@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const baseUrl = '/v1/encode';
+const baseUrl = '/encode';
 
 export interface EncodeResponse {
   short_url: string;

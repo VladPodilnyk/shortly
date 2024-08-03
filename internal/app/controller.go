@@ -14,23 +14,21 @@ import (
 func Routes(appData *AppData) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	// mux.HandleFunc("GET /", appData.serveStaticFile)
-
-	mux.HandleFunc("POST /v1/encode",
+	mux.HandleFunc("POST /encode",
 		applyMiddleware(
 			appData.encodeUrlHandler,
 			rateLimiterMiddleware(appData),
 			jsonParsingMiddleware[models.UserRequest](appData),
 		),
 	)
-	mux.HandleFunc("POST /v1/decode",
+	mux.HandleFunc("GET /{token}",
 		applyMiddleware(
 			appData.decodeUrlHandler,
 			rateLimiterMiddleware(appData),
-			jsonParsingMiddleware[models.EncodedUrl](appData),
+			queryParsingMiddleware(appData, "token"),
 		),
 	)
-	mux.HandleFunc("GET /v1/status",
+	mux.HandleFunc("GET /status",
 		applyMiddleware(
 			appData.healthCheckHandler,
 			rateLimiterMiddleware(appData),
@@ -38,10 +36,6 @@ func Routes(appData *AppData) *http.ServeMux {
 	)
 	return mux
 }
-
-// func (app *AppData) serveStaticFile(w http.ResponseWriter, r *http.Request) {
-// 	http.ServeFile(w, r, "static/index.html")
-// }
 
 func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -57,30 +51,30 @@ func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortUrl, err := getShortUrl(ctx, app, userRequest.Alias)
+	token, err := getToken(ctx, app, userRequest.Alias)
 	if err != nil {
 		app.serverErrorResponse(w, err)
 		return
 	}
 
-	finalShortUrl := makeShortUrl(app.Config.Prefix, shortUrl)
-	err = app.Storage.Save(ctx, userRequest.Url, finalShortUrl)
+	err = app.Storage.Save(ctx, userRequest.Url, token)
 	if err != nil {
 		app.logError(err)
 		app.serverErrorResponse(w, err)
 	}
-	app.successfulResponse(w, models.EncodedUrl{ShortUrl: finalShortUrl})
+	shortUrl := withPrefix(app.Config.Prefix, token)
+	app.successfulResponse(w, models.EncodedUrl{ShortUrl: shortUrl})
 }
 
 func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	encodedUrl, ok := getPayload[models.EncodedUrl](ctx)
+	encodedUrl, ok := getPayload[string](ctx)
 	if !ok {
 		app.serverErrorResponse(w, ErrInvalidPayload)
 		return
 	}
 
-	originalUrl, err := app.Storage.Get(ctx, encodedUrl.ShortUrl)
+	originalUrl, err := app.Storage.Get(ctx, encodedUrl)
 	if err != nil {
 		switch {
 		case errors.Is(err, storage.ErrRecordNotFound):
@@ -90,7 +84,7 @@ func (app *AppData) decodeUrlHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	app.successfulResponse(w, models.DecodedUrl{OriginalUrl: originalUrl})
+	http.Redirect(w, r, originalUrl, http.StatusFound)
 }
 
 func (app *AppData) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
@@ -121,11 +115,11 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 	return validationErrors
 }
 
-func makeShortUrl(prefix string, shortUrl string) string {
+func withPrefix(prefix string, shortUrl string) string {
 	return fmt.Sprintf("%s/%s", prefix, shortUrl)
 }
 
-func getShortUrl(ctx context.Context, app *AppData, alias string) (string, error) {
+func getToken(ctx context.Context, app *AppData, alias string) (string, error) {
 	var shortUrl string
 	if len(alias) > 0 {
 		_, err := app.Storage.Get(ctx, alias)

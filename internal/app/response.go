@@ -10,6 +10,8 @@ import (
 // List of errors
 var ErrInvalidPayload = errors.New("failed to parse request payload")
 var ErrAliasAlreadyExists = errors.New("alias already exists")
+var ErrInternalError = errors.New("internal error")
+var ErrBrokenUrl = errors.New("broken url")
 
 // Response helpers
 func (app *AppData) logError(err error) {

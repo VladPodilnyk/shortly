@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/v1/encode': {
+      '/encode': {
         target: 'http://localhost:8080',
       }
     }

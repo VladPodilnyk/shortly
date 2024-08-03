@@ -49,3 +49,26 @@ func jsonParsingMiddleware[T any](app *AppData) Middleware {
 		})
 	}
 }
+
+func queryParsingMiddleware(app *AppData, wildcard string) Middleware {
+	return func(next http.HandlerFunc) http.HandlerFunc {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if len(wildcard) == 0 {
+				app.serverErrorResponse(w, ErrInternalError)
+				app.Logger.Printf("unexpected wildcard value, url path %s \n", r.URL.Path)
+				return
+			}
+
+			token := r.PathValue(wildcard)
+			if len(token) == 0 {
+				app.badRequestResponse(w, ErrBrokenUrl)
+				return
+			}
+
+			ctx := r.Context()
+			ctx = context.WithValue(ctx, ContextPayloadKey, token)
+			r = r.WithContext(ctx)
+			next.ServeHTTP(w, r)
+		})
+	}
+}

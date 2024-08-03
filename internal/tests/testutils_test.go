@@ -41,7 +41,7 @@ func newTestApp() testData {
 		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10, Prefix: "https://shortly.io"},
 		Version:     "1.0.0",
 		Logger:      nil,
-		Storage:     storage.NewMongoDbStorage(testMongoClient),
+		Storage:     storage.NewMongoDbStorage(testMongoClient, "test_refs", "test_urls"),
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 
