@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -38,7 +39,7 @@ func newTestApp() testData {
 	}
 
 	app := &app.AppData{
-		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10, Prefix: "https://shortly.io"},
+		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10},
 		Version:     "1.0.0",
 		Logger:      nil,
 		Storage:     storage.NewMongoDbStorage(testMongoClient, "test_refs", "test_urls"),
@@ -59,6 +60,7 @@ func newTestApp() testData {
 
 func newTestServer(routes http.Handler) *testServer {
 	ts := httptest.NewServer(routes)
+	fmt.Println("Test server started at: ", ts.URL)
 
 	// Disable redirects
 	ts.Client().CheckRedirect = func(req *http.Request, via []*http.Request) error {
@@ -100,6 +102,30 @@ func (ts *testServer) post(t *testing.T, path string, payload string, dst interf
 	}
 
 	return result.StatusCode
+}
+
+func (ts *testServer) testRedirect(t *testing.T, path string, expectedLocation string) {
+	result, err := ts.Client().Get(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	statusCode := result.StatusCode
+	location := result.Header.Get("Location")
+
+	if statusCode != http.StatusFound {
+		t.Errorf("want %d; got %d", http.StatusFound, statusCode)
+	}
+
+	if location != expectedLocation {
+		t.Errorf("invalid redirect location, want %s; got %s", expectedLocation, location)
+	}
+}
+
+func getTokenFromPath(path string) string {
+	pattern := `http://.+/([a-zA-Z0-9]+)`
+	re := regexp.MustCompile(pattern)
+	return re.FindStringSubmatch(path)[1]
 }
 
 func checkStatusCode(t *testing.T, code int) {
