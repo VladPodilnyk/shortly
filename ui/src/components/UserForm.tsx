@@ -61,6 +61,7 @@ export function UserForm() {
                     value={alias}
                     error={rq.isAliasInvalid}
                     onChange={onAliasChange}
+                    size='compact'
                   />
                 </FormControl>
               </Block>
