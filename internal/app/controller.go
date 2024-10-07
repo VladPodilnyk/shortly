@@ -14,6 +14,8 @@ import (
 func Routes(appData *AppData) *http.ServeMux {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /", appData.serveIndex)
+
 	mux.HandleFunc("POST /encode",
 		applyMiddleware(
 			appData.encodeUrlHandler,
@@ -35,6 +37,10 @@ func Routes(appData *AppData) *http.ServeMux {
 		),
 	)
 	return mux
+}
+
+func (app *AppData) serveIndex(w http.ResponseWriter, r *http.Request) {
+	http.FileServer(http.FS(*app.Fs)).ServeHTTP(w, r)
 }
 
 func (app *AppData) encodeUrlHandler(w http.ResponseWriter, r *http.Request) {

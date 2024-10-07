@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io/fs"
 	"log"
 
 	"github.com/spf13/viper"
@@ -16,6 +17,7 @@ type AppData struct {
 	Logger      *log.Logger
 	Storage     storage.Storage // app persistance
 	RateLimiter *rate.Limiter   // application rate limiter;
+	Fs          *fs.FS
 }
 
 func GetVersion() (string, error) {

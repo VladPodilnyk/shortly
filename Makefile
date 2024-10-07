@@ -10,15 +10,14 @@ start:
 	docker build -f ./build/Dockerfile --tag url-shortener-app .
 	docker run -p 4000:4000 url-shortener-app
 
+.PHONY: compile
+compile:
+	go build -o ./bin/shortly ./cmd/shortly
+
 ## run-dev: runs the cmd/api application
 .PHONY: run-dev
 run-dev:
-	go run ./cmd/shortly --env=dev
-
-## run-ui: runs the ui dev server
-.PHONY: run-ui
-run-ui:
-	cd ui && yarn dev
+	find . -name *.go -o -name *.js -o -name *.html | entr -r go run ./cmd/shortly --env=dev
 
 ## audit: tidy dependencies and format
 .PHONY: audit
@@ -38,3 +37,9 @@ test:
 	@echo 'Testing code...'
 	docker-compose up -d
 	go test -race -vet=off ./...
+
+.PHONY: cleanup
+cleanup:
+	docker-compose down
+	rm -rf ./bin
+	rm -rf ./build/

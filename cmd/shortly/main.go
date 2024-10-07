@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"os"
 	"time"
@@ -13,6 +15,9 @@ import (
 	"shortly.io/internal/config"
 	"shortly.io/internal/storage"
 )
+
+//go:embed public/*
+var embeddedDirectory embed.FS
 
 func logFatalAndExit(logger *log.Logger, err error) {
 	if err != nil {
@@ -38,6 +43,9 @@ func main() {
 	cfg, err := config.ReadConfig()
 	logFatalAndExit(logger, err)
 
+	fs, err := fs.Sub(embeddedDirectory, "public")
+	logFatalAndExit(logger, err)
+
 	version, err := app.GetVersion()
 	logFatalAndExit(logger, err)
 
@@ -53,6 +61,7 @@ func main() {
 		Logger:      logger,
 		Storage:     mongoDb,
 		RateLimiter: rate.NewLimiter(rate.Every(time.Minute), cfg.RequestPerMinute),
+		Fs:          &fs,
 	}
 
 	err = app.Serve(data)
