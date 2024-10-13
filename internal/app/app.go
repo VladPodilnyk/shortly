@@ -17,7 +17,7 @@ type AppData struct {
 	Logger      *log.Logger
 	Storage     storage.Storage // app persistance
 	RateLimiter *rate.Limiter   // application rate limiter;
-	Fs          *fs.FS
+	PublicFS    fs.FS
 }
 
 func GetVersion() (string, error) {
