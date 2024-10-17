@@ -2,9 +2,13 @@
 cmd/.DS_Store
 cmd/shortly/.DS_Store
 
+# Tailwind CSS
+cmd/shortly/public/css/
+
 .vscode/
 tailwindcss
 .application*.json
 
 ./build
 ./bin
+
