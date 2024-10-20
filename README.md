@@ -1,4 +1,10 @@
 ### Shortly
 
-A URL shortener service at home xD
-🚧 This repo is under rework 🚧
+Shortly is an open-sourced, free url-shortener service.
+
+#### Internals
+🚧 TBD 🚧
+
+#### Self-host
+🚧 TBD 🚧
+
