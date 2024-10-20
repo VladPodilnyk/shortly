@@ -16,13 +16,12 @@ compile:
 
 .PHONY: build-styles
 build-styles:
-	./tailwindcss -i ./cmd/shortly/main.css -o ./cmd/shortly/public/css/output.css --minify
+	bash scripts/build_styles.sh
 
 ## run-dev: runs the cmd/api application
 .PHONY: run-dev
 run-dev:
-	./tailwindcss -i ./cmd/shortly/main.css -o ./cmd/shortly/public/css/output.css --minify
-	find . -name *.go -o -name *.js -o -name *.html | entr -r go run ./cmd/shortly --env=dev
+	bash scripts/run_dev.sh
 
 ## audit: tidy dependencies and format
 .PHONY: audit
