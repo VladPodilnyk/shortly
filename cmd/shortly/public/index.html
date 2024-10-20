@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shortly</title>
     <link href="/css/output.css" type="text/css" rel="stylesheet">
-    <!-- <script src="/js/main.js" defer></script> -->
+    <script src="/js/main.js" defer></script>
   </head>
   <body>
     <div id="container" class="flex flex-col m-8 w-full h-full">
@@ -16,9 +16,18 @@
             <p class="font-semibold mb-2">Super long URL</p>
             <input id="long-url-input" class="text-sm rounded-lg w-full mb-2" />
             <p class="font-semibold mb-2">Alias (optional)</p>
-            <input id="alias-input" class="text-sm rounded-lg w-full mb-8" />
+            <input id="alias-input" class="text-sm rounded-lg w-full mb-4" />
+            <div id="result" class="hidden flex-col mb-8">
+              <p class="font-semibold mb-2">Short URL</p>
+              <div class="flex flex-row justify-between gap-2 items-center">
+                <input id="copy-text" type="text" class="text-sm w-full rounded-lg" />
+                <button id="copy-button" class="text-sm font-bold py-2 px-4 border border-transparent rounded-lg bg-black text-white hover:text-black hover:bg-white hover:border-black">
+                  Copy
+                </button>
+              </div>
+            </div>
             <div class="flex flex-row justify-end">
-              <button id="submit-button" type="submit" class="font-bold py-2 px-4 rounded-lg bg-black text-white">
+              <button id="submit-button" type="submit" class="text-sm font-bold py-2 px-4 mb-1 rounded-lg bg-black text-white border border-transparent hover:text-black hover:bg-white hover:border-black">
                 Make it short
               </button>
             </div>
