@@ -9,7 +9,10 @@
   </head>
   <body>
     <div id="container" class="flex flex-col m-8 w-full h-full">
+      <!-- Title -->
       <h1 id="title" class="text-2xl font-bold mb-40">Shortly</h1>
+
+         <!-- Form -->
       <div id="form-container" class="flex flex-row justify-center items-center">
         <div id="form" class="flex flex-row border-2 border-solid border-black rounded-lg p-4">
           <div id="inner-form-container" class="flex flex-col min-w-96">
@@ -17,6 +20,7 @@
             <input id="long-url-input" class="text-sm rounded-lg w-full mb-2" />
             <p class="font-semibold mb-2">Alias (optional)</p>
             <input id="alias-input" class="text-sm rounded-lg w-full mb-4" />
+            <p id="alias-err-hint" class="hidden text-xs text-red-700" />
             <div id="result" class="hidden flex-col mb-8">
               <p class="font-semibold mb-2">Short URL</p>
               <div class="flex flex-row justify-between gap-2 items-center">
@@ -34,6 +38,11 @@
           </div>
         </div>
       </div>
+
     </div>
+
+    <!-- Notification container -->
+    <div id="notification-container" class="fixed bottom-0 z-50 m-4 w-72"></div>
+
   </body>
 </html>
