@@ -12,37 +12,38 @@
       <!-- Title -->
       <h1 id="title" class="text-2xl font-bold mb-40">Shortly</h1>
 
+      <div id="main-panel-container" class="flex flex-col justify-center items-center">
          <!-- Form -->
-      <div id="form-container" class="flex flex-row justify-center items-center">
-        <div id="form" class="flex flex-row border-2 border-solid border-black rounded-lg p-4">
-          <div id="inner-form-container" class="flex flex-col min-w-96">
-            <p class="font-semibold mb-2">Super long URL</p>
-            <input id="long-url-input" class="text-sm rounded-lg w-full mb-2" />
-            <p class="font-semibold mb-2">Alias (optional)</p>
-            <input id="alias-input" class="text-sm rounded-lg w-full mb-4" />
-            <p id="alias-err-hint" class="hidden text-xs text-red-700" />
-            <div id="result" class="hidden flex-col mb-8">
-              <p class="font-semibold mb-2">Short URL</p>
-              <div class="flex flex-row justify-between gap-2 items-center">
-                <input id="copy-text" type="text" class="text-sm w-full rounded-lg" />
-                <button id="copy-button" class="text-sm font-bold py-2 px-4 border border-transparent rounded-lg bg-black text-white hover:text-black hover:bg-white hover:border-black">
-                  Copy
+        <div id="form-container" class="flex flex-row justify-center items-center">
+          <div id="form" class="flex flex-row border-2 border-solid border-black rounded-lg p-4">
+            <div id="inner-form-container" class="flex flex-col min-w-96">
+              <p class="font-semibold mb-2">Super long URL</p>
+              <input id="long-url-input" class="text-sm rounded-lg w-full focus:outline-none focus:border-black focus:ring-black focus:ring-1" />
+              <p id="url-err-hint" class="hidden text-xs text-red-700 mt-2"></p>
+              <p class="font-semibold mb-2 mt-2">Alias (optional)</p>
+              <input id="alias-input" class="text-sm rounded-lg w-full focus:outline-none focus:border-black focus:ring-black focus:ring-1" />
+              <p id="alias-err-hint" class="hidden text-xs text-red-700 mt-2"></p>
+              <div id="result" class="hidden flex-col mt-4 mb-8">
+                <p class="font-semibold mb-2">Short URL</p>
+                <div class="flex flex-row justify-between gap-2 items-center">
+                  <input id="copy-text" type="text" class="text-sm w-full rounded-lg" />
+                  <button id="copy-button" class="text-sm font-bold py-2 px-4 border border-transparent rounded-lg bg-black text-white hover:text-black hover:bg-white hover:border-black">
+                    Copy
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex-row justify-end mt-4">
+                <button id="submit-button" type="submit" class="text-sm font-bold py-2 px-4 mb-1 rounded-lg bg-black text-white border border-transparent hover:text-black hover:bg-white hover:border-black">
+                  Make it short
                 </button>
               </div>
             </div>
-            <div class="flex flex-row justify-end">
-              <button id="submit-button" type="submit" class="text-sm font-bold py-2 px-4 mb-1 rounded-lg bg-black text-white border border-transparent hover:text-black hover:bg-white hover:border-black">
-                Make it short
-              </button>
-            </div>
           </div>
         </div>
+
+        <!-- Notification container -->
+        <div id="notification-container-id" class="fixed bottom-0 z-50 m-4 w-72 notification-container"></div>
       </div>
-
     </div>
-
-    <!-- Notification container -->
-    <div id="notification-container" class="fixed bottom-0 z-50 m-4 w-72"></div>
-
   </body>
 </html>

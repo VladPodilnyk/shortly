@@ -10,7 +10,7 @@
     animation: slideOutDown 0.3s ease-in forwards;
 }
 
-#notification-container {
+.notification-container {
     display: flex;
     flex-direction: column-reverse;
 }

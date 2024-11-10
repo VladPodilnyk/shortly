@@ -7,7 +7,6 @@ const pageState = {
     hasValidationErrors: false,
 }
 
-// TODO: fix styles
 function createNotification(message) {
     if (pageState.isNotificationDisplayed) {
         return null;
@@ -43,7 +42,7 @@ function removeNotification(notification) {
 }
 
 function showNotification(message) {
-    const container = document.getElementById('notification-container');
+    const container = document.getElementById('notification-container-id');
     const notification = createNotification(message);
     if (notification === null) {
         return;
@@ -76,9 +75,12 @@ async function handleSuccess(response) {
 async function handleValidationError(response) {
     pageState.hasValidationErrors = true;
     const urlErrHintArea = document.getElementById("url-err-hint");
+    const urlInput = document.getElementById("long-url-input");
     const aliasErrHintArea = document.getElementById("alias-err-hint");
+    const aliasInput = document.getElementById("alias-input");
     const json = await response.json();
     const {url, alias} = json.errors;
+
     if (url) {
         urlErrHintArea.classList.remove("hidden");
         urlErrHintArea.innerText = url;
@@ -91,20 +93,21 @@ async function handleValidationError(response) {
 }
 
 function cleanUpErrorHints() {
+    const urlInput = document.getElementById("long-url-input");
     const urlErrHintArea = document.getElementById("url-err-hint");
+    const aliasInput = document.getElementById("alias-input");
     const aliasErrHintArea = document.getElementById("alias-err-hint");
+
     urlErrHintArea.innerText = "";
-    aliasErrHintArea.innerText = "";
     urlErrHintArea.classList.add("hidden");
+
+    aliasErrHintArea.innerText = "";
     aliasErrHintArea.classList.add("hidden");
+
     pageState.hasValidationErrors = false;
 }
 
 async function makeItShort() {
-    if (pageState.hasValidationErrors) {
-        cleanUpErrorHints();
-    }
-
     const longUrl = document.getElementById("long-url-input").value;
     const alias = document.getElementById("alias-input").value;
     const payload = JSON.stringify({url: longUrl, alias});
@@ -112,18 +115,18 @@ async function makeItShort() {
     try {
         document.body.style.cursor = "wait";
         const response = await fetch(BASE_URL, {method: "POST", body: payload, headers: DEFAULT_HEADERS});
-        console.log('DEBUG', response);
         if (response.ok) {
+            if (pageState.hasValidationErrors) {
+                cleanUpErrorHints();
+            }
             await handleSuccess(response);
         } else {
-            console.log('DEBUG validation error');
             await handleValidationError(response);
         }
-        document.body.style.cursor = "default";
     } catch (_e) {
-        document.body.style.cursor = "default";
-        console.log(_e);
         showNotification("Service is currently unavailable. Please try again later.");
+    } finally {
+        document.body.style.cursor = "default";
     }
 }
 

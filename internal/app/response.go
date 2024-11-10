@@ -19,7 +19,7 @@ func (app *AppData) logError(err error) {
 }
 
 func (app *AppData) errorResponse(w http.ResponseWriter, status int, message any) {
-	response := map[string]any{"error": message}
+	response := map[string]any{"errors": message}
 	err := helpers.WriteJSON(w, status, response, nil)
 	if err != nil {
 		app.logError(err)
@@ -29,7 +29,7 @@ func (app *AppData) errorResponse(w http.ResponseWriter, status int, message any
 
 func (app *AppData) serverErrorResponse(w http.ResponseWriter, err error) {
 	app.logError(err)
-	message := "server encountered a problem and couldn't proceed with your request"
+	message := "Server encountered a problem and couldn't proceed with your request"
 	app.errorResponse(w, http.StatusInternalServerError, message)
 }
 
@@ -41,7 +41,7 @@ func (app *AppData) successfulResponse(w http.ResponseWriter, data any) {
 }
 
 func (app *AppData) notFoundResponse(w http.ResponseWriter) {
-	message := "requested resource is not exists"
+	message := "Requested resource is not exists"
 	app.errorResponse(w, http.StatusNotFound, message)
 }
 
@@ -54,6 +54,6 @@ func (app *AppData) failedValidationResponse(w http.ResponseWriter, errors map[s
 }
 
 func (app *AppData) rateLimitedError(w http.ResponseWriter) {
-	message := "request was rate limited"
+	message := "Request was rate limited"
 	app.errorResponse(w, http.StatusTooManyRequests, message)
 }
