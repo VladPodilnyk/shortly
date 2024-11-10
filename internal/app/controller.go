@@ -107,11 +107,11 @@ func validateUserRequest(req models.UserRequest, maxAliasSize int) map[string]st
 	validationErrors := make(map[string]string)
 	_, err := http.Get(req.Url)
 	if err != nil {
-		validationErrors["url"] = "invalid url"
+		validationErrors["url"] = "Invalid url"
 	}
 
 	if req.Alias != "" && len(req.Alias) > maxAliasSize {
-		errorMessage := fmt.Sprintf("alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
+		errorMessage := fmt.Sprintf("Alias max size exceeded, must be lesser or equal to %d", maxAliasSize)
 		validationErrors["alias"] = errorMessage
 	}
 	return validationErrors
