@@ -53,7 +53,8 @@ func main() {
 	logFatalAndExit(logger, err)
 	defer closeDb(ctx, dbClient, logger)
 
-	mongoDb := storage.NewMongoDbStorage(dbClient, cfg.Storage.MongoDbName, cfg.Storage.MongoDbCollection)
+	mongoDb, err := storage.NewMongoDbStorage(ctx, dbClient, cfg.Storage.MongoDbName, cfg.Storage.MongoDbCollection)
+	logFatalAndExit(logger, err)
 
 	data := &app.AppData{
 		Config:      cfg,

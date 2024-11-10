@@ -38,11 +38,17 @@ func newTestApp() testData {
 		panic(err)
 	}
 
+	storage, err := storage.NewMongoDbStorage(TestContext, testMongoClient, "test_refs", "test_urls")
+	if err != nil {
+		fmt.Printf("failed to create mongodb storage, err: %v\n", err)
+		panic(err)
+	}
+
 	app := &app.AppData{
 		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10},
 		Version:     "1.0.0",
 		Logger:      nil,
-		Storage:     storage.NewMongoDbStorage(testMongoClient, "test_refs", "test_urls"),
+		Storage:     storage,
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),
 	}
 

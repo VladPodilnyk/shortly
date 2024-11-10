@@ -75,9 +75,7 @@ async function handleSuccess(response) {
 async function handleValidationError(response) {
     pageState.hasValidationErrors = true;
     const urlErrHintArea = document.getElementById("url-err-hint");
-    const urlInput = document.getElementById("long-url-input");
     const aliasErrHintArea = document.getElementById("alias-err-hint");
-    const aliasInput = document.getElementById("alias-input");
     const json = await response.json();
     const {url, alias} = json.errors;
 
@@ -93,9 +91,7 @@ async function handleValidationError(response) {
 }
 
 function cleanUpErrorHints() {
-    const urlInput = document.getElementById("long-url-input");
     const urlErrHintArea = document.getElementById("url-err-hint");
-    const aliasInput = document.getElementById("alias-input");
     const aliasErrHintArea = document.getElementById("alias-err-hint");
 
     urlErrHintArea.innerText = "";
