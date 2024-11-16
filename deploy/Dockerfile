@@ -2,6 +2,8 @@
 
 FROM golang:1.22-alpine
 
+RUN apt-get update && apt-get install -y build-essential make
+
 WORKDIR /app
 
 COPY go.mod ./
@@ -12,7 +14,7 @@ RUN go mod download
 # copy all src files
 COPY . ./
 
-RUN go build -ldflags="-s" -o /docker-app-shortener ./cmd/api
+RUN make build
 
 EXPOSE 4000
 

@@ -10,8 +10,9 @@ start:
 	docker build -f ./build/Dockerfile --tag url-shortener-app .
 	docker run -p 4000:4000 url-shortener-app
 
-.PHONY: compile
-compile:
+.PHONY: build
+build:
+	bash scripts/build_styles.sh
 	go build -o ./bin/shortly ./cmd/shortly
 
 .PHONY: build-styles

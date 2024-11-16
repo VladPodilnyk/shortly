@@ -20,7 +20,7 @@ type MongoDbStorage struct {
 func NewMongoDbStorage(ctx context.Context, client *mongo.Client, dbName string, collectionName string) (*MongoDbStorage, error) {
 	col := client.Database(dbName).Collection(collectionName)
 	indexModel := mongo.IndexModel{
-		Keys: bson.D{{encodedUrlField, 1}},
+		Keys: bson.D{{Key: encodedUrlField, Value: 1}},
 	}
 	_, err := col.Indexes().CreateOne(ctx, indexModel)
 	if err != nil {
