@@ -7,17 +7,24 @@ help:
 ## start: runs an application inside a docker container
 .PHONY: start
 start:
-	docker build -f ./build/Dockerfile --tag url-shortener-app .
-	docker run -p 4000:4000 url-shortener-app
+	docker build -f ./deploy/Dockerfile --tag shortly .
+	docker run -p 4000:4000 shortly
 
+## build: builds an application and stores a binary in ./bin
 .PHONY: build
 build:
 	bash scripts/build_styles.sh
 	go build -o ./bin/shortly ./cmd/shortly
 
+## build-styles: builds styles file with tailwindcss
 .PHONY: build-styles
 build-styles:
 	bash scripts/build_styles.sh
+
+## build-container: builds a docker container for the app
+.PHONY: build-container
+build-container:
+	docker build -f ./deploy/Dockerfile --tag shortly .
 
 ## run-dev: runs the cmd/api application
 .PHONY: run-dev
@@ -43,6 +50,7 @@ test:
 	docker-compose up -d
 	go test -race -vet=off ./...
 
+## cleanup: cleans up dev artifacts
 .PHONY: cleanup
 cleanup:
 	rm ./cmd/shortly/public/output.css
