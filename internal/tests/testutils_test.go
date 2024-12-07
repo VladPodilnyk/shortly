@@ -46,7 +46,6 @@ func newTestApp() testData {
 
 	app := &app.AppData{
 		Config:      config.AppConfig{Environment: "testing", AliasMaxSize: 10},
-		Version:     "1.0.0",
 		Logger:      nil,
 		Storage:     storage,
 		RateLimiter: rate.NewLimiter(rate.Every(5*time.Second), 10),

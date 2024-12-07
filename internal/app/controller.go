@@ -93,7 +93,6 @@ func (app *AppData) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	response := models.SystemInfo{
 		Status:      "available",
 		Environment: app.Config.Environment,
-		Version:     app.Version,
 	}
 	app.successfulResponse(w, response)
 }

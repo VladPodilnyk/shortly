@@ -16,10 +16,10 @@ COPY --from=tailwindbuild /app/tailwindcss ./
 RUN go mod download
 RUN make build
 
-FROM alpine:latest as scratch
+FROM alpine:latest as final
 WORKDIR /app
 COPY --from=gobuild /app/bin/shortly ./
 
 EXPOSE 4000
 
-CMD [ "./shortly" ]
+CMD [ "./shortly"]

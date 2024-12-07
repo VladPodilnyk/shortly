@@ -27,7 +27,6 @@ func TestAppStatusRoute(t *testing.T) {
 	expectsStatusResponse := models.SystemInfo{
 		Status:      "available",
 		Environment: "testing",
-		Version:     "1.0.0",
 	}
 	code := ts.get(t, "/status", &statusRespHandler)
 	checkStatusCode(t, code)

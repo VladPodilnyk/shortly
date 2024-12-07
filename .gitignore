@@ -8,6 +8,7 @@ cmd/shortly/public/css/
 .vscode/
 tailwindcss
 .application*.json
+.env
 
 ./build
 ./bin

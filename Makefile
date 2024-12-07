@@ -43,11 +43,11 @@ audit:
 	go vet ./...
 	staticcheck ./...
 
-## test: runs test
-.PHONY: test
-test:
+## tests: runs tests
+.PHONY: tests
+tests:
 	@echo 'Testing code...'
-	docker-compose up -d
+	docker compose up -d
 	go test -race -vet=off ./...
 
 ## cleanup: cleans up dev artifacts

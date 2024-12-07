@@ -46,9 +46,6 @@ func main() {
 	publicFS, err := fs.Sub(public, "public")
 	logFatalAndExit(logger, err)
 
-	version, err := app.GetVersion()
-	logFatalAndExit(logger, err)
-
 	dbClient, err := setupDb(ctx, cfg.Storage.MongoDbUri)
 	logFatalAndExit(logger, err)
 	defer closeDb(ctx, dbClient, logger)
@@ -58,7 +55,6 @@ func main() {
 
 	data := &app.AppData{
 		Config:      cfg,
-		Version:     version,
 		Logger:      logger,
 		Storage:     mongoDb,
 		RateLimiter: rate.NewLimiter(rate.Every(time.Minute), cfg.RequestPerMinute),
