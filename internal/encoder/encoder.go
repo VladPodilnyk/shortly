@@ -7,9 +7,12 @@ import (
 )
 
 const minGeneratedNumber int64 = 1_000_000_000
+
+// Base58 is used to avoid characters like /, +
+// symbols that look very similar to each other,
+// like O and 0 (this should improve readability)
 const base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
-// TODO: clean up + add comments
 func Base58() string {
 	id := generateID()
 	// Number of digits in base58 representation of id,
@@ -34,6 +37,8 @@ func Base58() string {
 	return string(buffer[:elements])
 }
 
+// The function generates an 64-bit integer
+// in the following range [minGeneratedNumber (10e6), math.MaxInt64)
 func generateID() int64 {
 	maxPossibleValue := math.MaxInt64 - (math.MaxInt64 % minGeneratedNumber)
 	randomInt, err := rand.Int(rand.Reader, big.NewInt(maxPossibleValue))

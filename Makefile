@@ -4,12 +4,6 @@ help:
 	@echo 'Usage:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' | sed -e 's/^/ /'
 
-## start: runs an application inside a docker container
-.PHONY: start
-start:
-	docker build -f ./deploy/Dockerfile --tag shortly .
-	docker run -p 4000:4000 shortly
-
 ## build: builds an application and stores a binary in ./bin
 .PHONY: build
 build:
