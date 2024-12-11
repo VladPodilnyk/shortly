@@ -32,8 +32,8 @@ If you are curious about implementation details, please take a look at `./encode
 
 #### Running locally
 There are a few ways to play with Shortly on your local machine.
-The first one is a bit complicated and requires from you to have `Golang toolchain`,
-`make` and `tailwindcss` to be installed. In case this works for you, use `make help`
+The first one is a bit complicated and requires from you to have [Golang toolchain](https://go.dev/doc/install),
+[make](https://www.gnu.org/software/make/), [TailwindCSS](https://tailwindcss.com/docs/installation) and [entr](https://github.com/eradman/entr) to be installed. In case this works for you, use `make help`
 to list available commands and actions in the repo.
 
 The second option is to use `deploy/Dockerfile`. This one requires from you to have
